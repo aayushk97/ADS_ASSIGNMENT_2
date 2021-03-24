@@ -8,5 +8,6 @@ class sample {
 		Scanner input = new Scanner(System.in);
 		int x = input.nextInt();
 		System.out.println("Fine: you entered: " + x);
+		System.out.println("Step2: Find notes to implement GHS.");
 	}
 }
