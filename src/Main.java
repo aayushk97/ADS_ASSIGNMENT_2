@@ -16,3 +16,9 @@ public class Main{
 
 
 }
+
+class Edge{
+	//https://stackoverflow.com/questions/26421239/locking-cells-of-an-array
+	int weight;
+	int status;
+}
