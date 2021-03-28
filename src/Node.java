@@ -25,7 +25,7 @@ class Node implements Runnable{
 		//Constructor to initialize a node
 		state = SLEEP;
 		fragmentId = nodeId; 			// can we use nodeId as fragement id?
-		level = Integer.MAX_VALUE; 		// to say it's currently in sleep mode itself.
+		level = Integer.MAX_VALUE; 		// to say it's currently in sleep mode itself. 
 		this.nodeId = nodeId;
 		int len = listOfNeighbors.length;
 		neighbors = new int[len][4];  // let first column be for: nodeId of nighbor, second: weight, third: status
@@ -50,20 +50,20 @@ class Node implements Runnable{
 			System.out.println("Graph is disconnected or Edges or not initialize properly");
 
 		}else{
-			neighbors[q][2] = BRANCH;
-			state = FOUND;
+			neighbors[q][2] = BRANCH;   
+			state = FOUND;               
 			level = 0;
 			rec = 0;
 			//send <connect,0> to q how? Can we invoke other thread how do I accept other 
 			//threads message after  sending this message?
-			sendConnectMessage(q);
+			sendConnectMessage(q);   //EDIT 1: We send the level as parameter not the min weight?
 		}
 	}
 
 	private int findMinimumWeightEdge(){
 		int wt = Integer.MAX_VALUE;
 		int indexMin = -1;
-		for(int i =0; i < neighbors.lenght; i++){
+		for(int i =0; i < neighbors.length; i++){         
 			if(neighbors[i][2] == BASIC){
 
 				if(wt > neighbors[i][1]){
