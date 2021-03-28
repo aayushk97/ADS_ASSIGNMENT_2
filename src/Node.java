@@ -24,7 +24,7 @@ class Node implements Runnable{
 	public Node(int nodeId, int[] listOfNeighbors){
 		//Constructor to initialize a node
 		state = SLEEP;
-		fragmentId = nodeId; 			// can we use nodeId as fragement id?
+		fragmentId = nodeId; 			// can we use nodeId as fragement id? Edit 1: When it is initialized the value of fragment id will be node id.
 		level = Integer.MAX_VALUE; 		// to say it's currently in sleep mode itself. 
 		this.nodeId = nodeId;
 		int len = listOfNeighbors.length;
@@ -78,8 +78,13 @@ class Node implements Runnable{
 		//What I think we can't invoke method in other node..what do you think? We need to 
 		// somehow give a msg to other node? Can we receive a message incide this object?
 		// Or some global array/vector/queue need to be initialize..
+		
+		//Edit 1: we can try using DataOutputStream/DataInputStream as in below link states
+		//https://stackoverflow.com/questions/5680259/using-sockets-to-send-and-receive-data
+		//If some global data structure is used, we need to implement access control?
 
-
+		//EDIT 1: Is it better to Create a message class so we don't have to write seperate function for sending each type of message?
+		
 	}
 
 	public processConnectMsg(int qID, int qLevel){
@@ -92,7 +97,7 @@ class Node implements Runnable{
 		}else if(neighbors[qID][2] == BASIC){
 			//how to implement wait? // Can we call initialize or find... we need to invoke a method to
 			// continue execution. I think we can make a manager method.
-			waitManager();  // need to push back message else it will be lost...
+			waitManager();  // need to push back message else it will be lost... //EDIT 1: QUEUE?
 
 		}else{
 
@@ -101,3 +106,5 @@ class Node implements Runnable{
 	}
 
 }
+//EDIT 1: Can we have a class for edge so that it would be easier for us to connect to 2 nodes. Just connect one end of edge to one node and other end to other instead of specifying on both nodes what are the nodes it is connected to?
+//https://www.geeksforgeeks.org/kruskals-minimum-spanning-tree-algorithm-greedy-algo-2/
