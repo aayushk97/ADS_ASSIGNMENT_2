@@ -11,6 +11,8 @@ class Utility{
 			Main.N = fileStream.nextInt();
 			fileStream.nextLine();
 			System.out.println("Number of nodes: " + Main.N);
+			Main.G = new Edge[Main.N][Main.N];
+			
 			while(fileStream.hasNextLine()){
 				//System.out.println("Hey:");
 				String line = fileStream.nextLine();
@@ -21,14 +23,36 @@ class Utility{
 					int p = Integer.parseInt(x[0]);
 					int q = Integer.parseInt(x[1]);
 					int w = Integer.parseInt(x[2]);
-					//System.out.println("p: " + p + " q: " + q + " w: " + w);
-					//System.out.println();
+					Edge e = new Edge(p, q, w, 0);
+					System.out.println("p: " + p + " q: " + q + " w: " + w);
+					if(Main.G[p][q]==null && Main.G[q][p] == null){
+						Main.G[p][q] = e;
+						Main.G[q][p] = e;
+					}else{
+						System.out.println("There seems directed or duplicate edges");
+					}
+					
 				}
 			}
 		}catch(FileNotFoundException e){
 			System.out.println("FileNotFoundException");
 		}catch(NumberFormatException e){
 			System.out.println("NumberFormatException");
+		}catch(ArrayIndexOutOfBoundsException exp){
+			System.out.println("NodeIds are not in range of 0 to N-1");
+		}
+	}
+
+	public static void printGraph(Edge[][] G){
+		System.out.println("Printing Graph: All edges");
+		for(int i = 0; i < Main.N; i++){
+			for(int j = 0; j < Main.N; j++){
+				if(G[i][j] != null && i<=j ){
+					Edge e = G[i][j];
+					System.out.println(e.getStart() + " " + e.getEnd() + " " + e.getWeight());
+				}
+			}
 		}
 	}
 }
+

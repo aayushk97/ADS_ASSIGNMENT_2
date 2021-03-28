@@ -2,7 +2,7 @@
 class Node implements Runnable{
 	private Thread tId;
 	private nodeId;
-	private int state; // let 0 indicate sleep, 1: find, 2 found.
+	private int state; // let 0 indicate sleep, 1: find, 2 found states.
 	public int fragmentId;
 	public int level;
 	private int[][] neighbors;	//list of all neighbours with thier edge status ( basic:0/branch:1/reject:2) and edge weights
