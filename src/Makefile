@@ -4,4 +4,4 @@ ghs:
 	javac Main.java
 	java Main
 clean:
-	rm Main
+	rm *.class
