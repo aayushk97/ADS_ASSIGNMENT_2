@@ -19,3 +19,21 @@ https://en.wikipedia.org/wiki/Data_parallelism
 https://en.wikipedia.org/wiki/Task_parallelism
 
 https://www.shellscript.sh/first.html
+
+
+wakeup():
+1. Find the min weight edge connected to this node.
+2. Set the state of edge to 1 and add this edge to MST.
+3. Set the level to 0, state to 2 of this node.
+4. Create a new message with id, args and weight of min weight edge.
+5. Send the message to node connected with this edge.
+
+addmessage():
+1. The node which receives the message will add it in it's buffer(An message array/queue)
+
+When it switches to other thread
+readMessage():
+1. If there are messages in its queue.
+2. We take the message and compare the value of edge weight we received with the edges connected to this node.
+3. A switch case is used to handle the message appropriately.
+4. If the message is type 0 we call connect with 
