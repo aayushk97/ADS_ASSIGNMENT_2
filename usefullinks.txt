@@ -29,6 +29,42 @@ ii. Rule EQ: If level(F1) = level(F2) then level of both fragments are increment
  New name is eF + 1, where eF is name of minimum weight combining edge.
 iii. Rule Wait: wait till any of the above rules apply.
  
+Status array of qth entry: status[q]
+i. Basic: Edge is usused. Status is not known.
+ii. Branch: Edge is part of MST.
+iii. Reject: Edge is not part of MST.
+
+Algorithm:
+1. Initialization:
+ i. If pq is least weight edge from p.
+ ii. Set the required varibles
+ iii. Send a connect message to q as <connect, 0>
+ 
+2. Process connect Message:
+  Receive <connect, L> from q:
+   if L < level then   // We look at our level and level of the message
+    //combine with rule LT
+    status[q] <- branch  
+    send <initiate, level, name, state> to q// send back initiate message to node which set the connect message with new level, name and my state.
+    
+   end
+   else if status[q] = basic then 
+    wait // This level is not explored or L > level
+   end
+   else
+    //combining with EQ
+    send <initate, level+1, pq, find> to q // we send the same inital message with increment level and name of new fragment as connecting edge and set state
+    // to find to least weight fragment and grow.
+   end
+   
+3. Receipt of initiate message:
+ Receive <initiate, level', name', state'> to q
+  1. After receivinf the initiate message from it neighbour after processing the connect 
+  2. We change the paramters of this fragment or node to new values sent in message.
+  2. Then we set the node which sent the initiate message as parent.
+  
+  //Now we propagate the update
+  
  
 wakeup():
 1. Find the min weight edge connected to this node.
