@@ -21,6 +21,15 @@ https://en.wikipedia.org/wiki/Task_parallelism
 https://www.shellscript.sh/first.html
 
 
+Each fragment has a level,
+Assuming that F1 combines with F2 it can only do that when
+level(F1) <= level(F2)
+i. Rule LT: If level(F1) < level(F2) then all the nodes in F1 take on the name and level of F2.
+ii. Rule EQ: If level(F1) = level(F2) then level of both fragments are incremented by 1. The node of F1 union F2 is assigned a higher level.
+ New name is eF + 1, where eF is name of minimum weight combining edge.
+iii. Rule Wait: wait till any of the above rules apply.
+ 
+ 
 wakeup():
 1. Find the min weight edge connected to this node.
 2. Set the state of edge to 1 and add this edge to MST.
