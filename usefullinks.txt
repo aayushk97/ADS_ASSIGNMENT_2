@@ -61,9 +61,30 @@ Algorithm:
  Receive <initiate, level', name', state'> to q
   1. After receivinf the initiate message from it neighbour after processing the connect 
   2. We change the paramters of this fragment or node to new values sent in message.
-  2. Then we set the node which sent the initiate message as parent.
+  3. Then we set the node which sent the initiate message as parent.
   
   //Now we propagate the update
+  set bestNode and bestwt to phi and inf
+  set testnode to none
+  
+  for each r beloning to neighbour and status of r is branch which is not the sender og initiate messsage i.e, q
+   send<initiate, level', name', state'> to r //i.e send initiate to child r. All of them point to combining edge
+  end
+  
+  //find least weight edge
+  if state = find then rec <- 0
+   findMin()
+ 
+ 4. FindMin():
+  if some q belongs in neighbours and status of q is basic (unexplored i.e, out of all outgoing edges if it is branch or reject it cannot be a candidate edge)
+  w(pq) is minimal then
+   testNode <- q
+   send<test, level, name> to testNode // try to see if a communication can be initiated with it.
+  end
+  else 
+   testNode <- phi
+   report()
+  end
   
  
 wakeup():
