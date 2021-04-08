@@ -8,6 +8,7 @@ class MsgType{
 	static final int REPORT2 = 6;
 	static final int CHANGEROOT = 7;
 }
+
 class Message {
 	int type;
 	int receipent;
@@ -18,10 +19,10 @@ class Message {
 		this.receipent = receiver;
 	}
 	
-	public void send(){
-		//Need to acquire lock...
+	// public void send(){
+	// 	//Need to acquire lock...
 
-	}
+	// }
 }
 
 class ConnectMessage extends Message{

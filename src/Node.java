@@ -1,5 +1,6 @@
 //https://web.mit.edu/6.005/www/fa14/classes/20-queues-locks/message-passing/
 import java.util.*;
+
 class Node implements Runnable{
 	private Thread tId;
 	private int nodeId;
@@ -33,15 +34,23 @@ class Node implements Runnable{
 		// for(Integer neighb : listOfNeighbors){
 		// 	System.out.println(neighb + " ");
 		// }
-		prepareNeighborList(listOfNeighbors);
+		
 		state = SLEEP;
 		fragmentId = nodeId; 			// can we use nodeId as fragement id? 
 										//Edit 1: When it is initialized the value of fragment id will be node id. Edit 2: Ok
 		level = Integer.MAX_VALUE; 		// to say it's currently in sleep mode itself. 
 		this.nodeId = nodeId;
 		//int len = listOfNeighbors.length;
-		neighbors = new int[20][4];  // let first column be for: nodeId of nighbor, second: weight, third: status
-										// fourth: whether its child(0) or parent(1) or neither -1.
+		neighbors = new int[4][listOfNeighbors.size()];  // let first column be for: nodeId of nighbor, second: weight, third: status
+		prepareNeighborList(listOfNeighbors);		// fourth: whether its child(0) or parent(1) or neither -1.
+		
+		// System.out.println("Printing from node: " + nodeId);
+
+		// for(int i =0 ; i < listOfNeighbors.size(); i++){
+		// 	System.out.println(neighbors[0][i] + " " + neighbors[1][i] + " " + neighbors[2][i]);
+		// }
+		
+
 		this.messageList = messageList;
 		
 	}
@@ -51,28 +60,28 @@ class Node implements Runnable{
 		//Edit 2: Currently, Code in this method only for checking if thread are running properly.
 		Random rn = new Random();
 		int i = 0;
-		while(true){
-			if(i==0){
-				System.out.println("initialization");
-				initialization();
-				i++;
-			}
-			else{
-				System.out.println("Running " + nodeId);
-				int q = rn.nextInt(Main.N);
+		// while(true){
+		// 	if(i==0){
+		// 		System.out.println("initialization");
+		// 		initialization();
+		// 		i++;
+		// 	}
+		// 	else{
+		// 		System.out.println("Running " + nodeId);
+		// 		int q = rn.nextInt(Main.N);
 
-				Message msg = new ConnectMessage(this.nodeId, q, 3);
-				sendMessage(msg);
-				getMessage();
+		// 		Message msg = new ConnectMessage(this.nodeId, q, 3);
+		// 		sendMessage(msg);
+		// 		getMessage();
 				
-			}
+		// 	}
 
-			try{
-				Thread.sleep(500);
-			}catch(Exception e){
+		// 	try{
+		// 		Thread.sleep(500);
+		// 	}catch(Exception e){
 
-			}
-		}
+		// 	}
+		// }
 	}
 
 	public void start(){
@@ -183,7 +192,17 @@ class Node implements Runnable{
 	private void prepareNeighborList(List<Integer> listOfNeighbors){
 		//Need to fill neighbors[][] array
 		// I am thinking to make it numberOfneighbors*4 size array (neighborId, weight, statusOfEdge, parent/child/none)
-		
+		int i = 0;
+		//System.out.println("Node: " + this.nodeId);
+		for(Integer q : listOfNeighbors){
+			//System.out.println(q + " " + Main.G[q][this.nodeId].getWeight());
+			neighbors[0][i] = q;
+			neighbors[1][i] = Main.G[q][this.nodeId].getWeight();
+			neighbors[2][i] = BASIC;
+			neighbors[3][i] = -1;
+			i++;
+		}
+
 	}
 
 }
