@@ -1,28 +1,50 @@
-class Edge{
-	//https://stackoverflow.com/questions/26421239/locking-cells-of-an-array
-		
-	private int start;
-	private int end;
-	private int weight;
-	private int status;
-	
-	final int BASIC = 0;
-	final int BRANCH = 1;
-	final int REJECT = 2;
-	
 
-	public Edge(int u, int v, int w, int st){
-
-		weight = w;
-		status = st;
-		start = u;
-		end = v;
+class Message {
+	MESSAGETYPE type;
+	int receipent;
+	int sender;  //can be nodeId.
+	
+	public Message(MESSAGETYPE type, int sender, int receiver){
+		this.type =type;
+		this.sender = sender;
+		this.receipent = receiver;
 	}
+	
+	public void send(){
+		//Need to acquire lock...
 
-	public int getWeight(){ return weight; }
-	public int getStatus(){ return status; }
-	public int getStart(){ return start; }
-	public int getEnd(){ return end; }
+	}
+}
 
-	public void setStatus(int st){ status = st; }
+class ConnectMessage extends Message{
+	int level;
+	public ConnectMessage(int sender, int receiver, int level){
+		super(MESSAGETYPE.CONNECT, sender, receiver);
+
+		this.level = level;
+	}
+}
+
+class InitiateMessage extends Message{
+	int level;
+	int fragmentName;
+	int state;
+
+	public InitiateMessage(int sender, int receiver, int level, int fragmentName, int state){
+		super(MESSAGETYPE.INITIATE, sender, receiver);
+		this.level = level;
+		this.fragmentName = fragmentName;
+		this.state = state;
+	}
+}
+
+class TestMessage extends Message{
+	int level;
+	int fragmentName;
+
+	public TestMessage(int sender, int receiver, int level, int fragmentName){
+		super(MESSAGETYPE.TEST, sender, receiver);
+		this.level = level;
+		this.fragmentName = fragmentName;
+	}
 }
