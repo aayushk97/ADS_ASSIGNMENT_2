@@ -14,7 +14,7 @@ class Node implements Runnable{
 				// but how other thread will put message on this this?call this object would make program sequential?
 	private int rec;
 
-	private List<Message> messageList;
+	private Queue<Message> messageList;
 
 	//edge status
 	final int BASIC = 0;
