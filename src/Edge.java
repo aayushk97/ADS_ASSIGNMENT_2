@@ -6,6 +6,10 @@ class Edge{
 	private int weight;
 	private int status;
 	
+	final int BASIC = 0;
+	final int BRANCH = 1;
+	final int REJECT = 2;
+	
 
 	public Edge(int u, int v, int w, int st){
 
