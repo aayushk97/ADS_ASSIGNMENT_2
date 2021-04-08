@@ -19,3 +19,87 @@ https://en.wikipedia.org/wiki/Data_parallelism
 https://en.wikipedia.org/wiki/Task_parallelism
 
 https://www.shellscript.sh/first.html
+
+
+Each fragment has a level,
+Assuming that F1 combines with F2 it can only do that when
+level(F1) <= level(F2)
+i. Rule LT: If level(F1) < level(F2) then all the nodes in F1 take on the name and level of F2.
+ii. Rule EQ: If level(F1) = level(F2) then level of both fragments are incremented by 1. The node of F1 union F2 is assigned a higher level.
+ New name is eF + 1, where eF is name of minimum weight combining edge.
+iii. Rule Wait: wait till any of the above rules apply.
+ 
+Status array of qth entry: status[q]
+i. Basic: Edge is usused. Status is not known.
+ii. Branch: Edge is part of MST.
+iii. Reject: Edge is not part of MST.
+
+Algorithm:
+1. Initialization:
+ i. If pq is least weight edge from p.
+ ii. Set the required varibles
+ iii. Send a connect message to q as <connect, 0>
+ 
+2. Process connect Message:
+  Receive <connect, L> from q:
+   if L < level then   // We look at our level and level of the message
+    //combine with rule LT
+    status[q] <- branch  
+    send <initiate, level, name, state> to q// send back initiate message to node which set the connect message with new level, name and my state.
+    
+   end
+   else if status[q] = basic then 
+    wait // This level is not explored or L > level
+   end
+   else
+    //combining with EQ
+    send <initate, level+1, pq, find> to q // we send the same inital message with increment level and name of new fragment as connecting edge and set state
+    // to find to least weight fragment and grow.
+   end
+   
+3. Receipt of initiate message:
+ Receive <initiate, level', name', state'> to q
+  1. After receivinf the initiate message from it neighbour after processing the connect 
+  2. We change the paramters of this fragment or node to new values sent in message.
+  3. Then we set the node which sent the initiate message as parent.
+  
+  //Now we propagate the update
+  set bestNode and bestwt to phi and inf
+  set testnode to none
+  
+  for each r beloning to neighbour and status of r is branch which is not the sender og initiate messsage i.e, q
+   send<initiate, level', name', state'> to r //i.e send initiate to child r. All of them point to combining edge
+  end
+  
+  //find least weight edge
+  if state = find then rec <- 0
+   findMin()
+ 
+ 4. FindMin():
+  if some q belongs in neighbours and status of q is basic (unexplored i.e, out of all outgoing edges if it is branch or reject it cannot be a candidate edge)
+  w(pq) is minimal then
+   testNode <- q
+   send<test, level, name> to testNode // try to see if a communication can be initiated with it.
+  end
+  else 
+   testNode <- phi
+   report()
+  end
+  
+ 
+wakeup():
+1. Find the min weight edge connected to this node.
+2. Set the state of edge to 1 and add this edge to MST.
+3. Set the level to 0, state to 2 of this node.
+4. Create a new message with id, args and weight of min weight edge.
+5. Send the message to node connected with this edge.
+
+addmessage():
+1. The node which receives the message will add it in it's buffer(An message array/queue)
+
+When it switches to other thread
+readMessage():
+1. If there are messages in its queue.
+2. We take the message and compare the value of edge weight we received with the edges connected to this node.
+3. A switch case is used to handle the message appropriately.
+4. If the message is type 0 we call connect with 
