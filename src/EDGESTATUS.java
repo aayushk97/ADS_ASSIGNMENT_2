@@ -1,0 +1,4 @@
+ public enum EDGESTATUS{
+	BASIC, BRANCH, REJECT;
+
+}
