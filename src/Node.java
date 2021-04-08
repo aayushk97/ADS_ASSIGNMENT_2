@@ -6,6 +6,8 @@ class Node implements Runnable{
 	private int state;
 	public int fragmentId;
 	public int level;
+	public Edge connectedEdges*;
+	
 	private int[][] neighbors;	//list of all neighbours with thier edge status ( basic:0/branch:1/reject:2) and edge weights
 				// a list of children: we can try to  use neighborlist as children also only 
 				//can specify parent seperately
@@ -93,9 +95,9 @@ class Node implements Runnable{
 
 		}else{
 			neighbors[q][2] = BRANCH;   
-			state = FOUND;               
-			level = 0;
-			rec = 0;
+			this -> state = FOUND;    //we set the state of node to be found           
+			this -> level = 0;	  //set the level to 0 as it is only node in fragment
+			rec = 0;			
 			//send <connect,0> to q how? Can we invoke other thread how do I accept other 
 			//threads message after  sending this message?
 			sendConnectMessage(q, level);   //EDIT 1: We send the level as parameter not the min weight?
