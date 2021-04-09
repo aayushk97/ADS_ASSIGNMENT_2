@@ -1,14 +1,14 @@
 class Test{
 	public static void main(String[] args){
 		Status e = Status.BASIC;
-		MessageType1 m = MessageType1.INITIATE;
+		MessageType m = MessageType.INITIATE;
 		if(e == Status.BRANCH)
 			System.out.println("Branch");
 		else if(e == Status.BASIC)
 			System.out.println("Basic");
-		if(m == MessageType1.INITIATE)
+		if(m == MessageType.INITIATE)
 			System.out.println("Intitate");
-		else if(m == MessageType1.CONNECT)
+		else if(m == MessageType.CONNECT)
 			System.out.println("Connect");
 		else
 			System.out.println("Nothing");

@@ -27,7 +27,7 @@ class Node implements Runnable{
 		this.nodeId = nodeId;
 		//int len = listOfNeighbors.length;
 		neighborsIndex = new HashMap<>();	
-		neighbors = new int[4][listOfNeighbors.size()];  // let first column be for: nodeId of nighbor, second: weight, third: status
+		neighbors = new int[listOfNeighbors.size()][5];  // let first column be for: nodeId of nighbor, second: weight, third: status
 		prepareNeighborList(listOfNeighbors);		// fourth: whether its child(0) or parent(1) or neither -1.
 		
 		System.out.println("Printing from node: " + nodeId);
@@ -61,21 +61,21 @@ class Node implements Runnable{
 		
 			System.out.println(nodeId + " Came Here??");
 			Message msg = getMessage();
-			if(msg!= null){
-				if(msg.type == MessageType.CONNECT){
-					System.out.println(nodeId + " proceesing Connect Message");
-					int flag = processConnectMsg(msg);
-					if(flag == 0 ){
+			// if(msg!= null){
+			// 	if(msg.type == MessageType.CONNECT){
+			// 		System.out.println(nodeId + " proceesing Connect Message");
+			// 		int flag = processConnectMsg(msg);
+			// 		if(flag == 0 ){
 
-					}
-				}else if (msg.type = MessageType.INITIATE){
+			// 		}
+			// 	}else if (msg.type == MessageType.INITIATE){
 
-				}else if(msg.type = MessageType.TEST){
+			// 	}else if(msg.type == MessageType.TEST){
 
-				}else if(msg.type = MessageType.REJECT){
+			// 	}else if(msg.type == MessageType.REJECT){
 					
-				}
-			}
+			// 	}
+			// }
 		}
 			
 		
