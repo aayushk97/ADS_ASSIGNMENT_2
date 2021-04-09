@@ -246,6 +246,25 @@ class Node implements Runnable{
 		}
 		//System.out.println("node: " + nodeId + " Message: " + "sender: " + msg.sender + " " + msg.type);
 	}
+	
+	private void processTestMessage(TestMessage msg){
+		if(level > msg.level){
+			//wait
+			//place message at end of queue
+		}else if(fraagmentId == msg.fragmentName){
+			//node is in same fragment so to prevent cycles this edge has to be rejected
+			if(neighbours[i][2] == Status.BASIC.ordinal()){
+				neighbours[i][2] = Status.BASIC.ordinal();
+			}
+			
+			
+		
+		}else{
+		
+		
+		}
+	
+	}
 
 	private void prepareNeighborList(List<Integer> listOfNeighbors){
 	
