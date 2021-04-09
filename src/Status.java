@@ -1,4 +1,4 @@
- public enum Status
+ enum Status
  {
  	//For edge status
 	BASIC, BRANCH, REJECT;

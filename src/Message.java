@@ -17,20 +17,22 @@ class Message {
 }
 
 class ConnectMessage extends Message{
-	int level;
+	public int level;
 	public ConnectMessage(int sender, int receiver, int level){
 		super(MessageType.CONNECT, sender, receiver);
 
 		this.level = level;
 	}
+	
+
 }
 
 class InitiateMessage extends Message{
 	int level;
 	int fragmentName;
-	int state;
+	NodeState state;
 
-	public InitiateMessage(int sender, int receiver, int level, int fragmentName, int state){
+	public InitiateMessage(int sender, int receiver, int level, int fragmentName, NodeState state){
 		super(MessageType.INITIATE, sender, receiver);
 		this.level = level;
 		this.fragmentName = fragmentName;
