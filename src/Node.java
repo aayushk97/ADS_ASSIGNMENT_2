@@ -14,6 +14,7 @@ class Node implements Runnable{
 	private Vector<Integer> children;
 	private int parent;	
 	private int rec;
+	private int testNode = -1;
 
 	private Queue<Message> messageList;
 
@@ -220,11 +221,19 @@ class Node implements Runnable{
 				neighbours[i][2] = Status.BASIC.ordinal();
 			}
 			
+			if(msg.sender != testNode){
+				//send reject message to q
+			}else{
+				//if q == testNode then q will mark its edge to me as reject so we need not worry
+				//about it
+				//findMin();
+				
+			}
 			
 		
 		}else{
-		
-		
+			//LEQ rule holds so we send ACCEPT Message to q
+			
 		}
 	
 	}
@@ -255,3 +264,5 @@ class Node implements Runnable{
 //https://www.geeksforgeeks.org/kruskals-minimum-spanning-tree-algorithm-greedy-algo-2/
 
 
+//To Do: append the find min wieght function to include report if it doesn;t find the least weight edge 
+//2. Write in detail the test class
