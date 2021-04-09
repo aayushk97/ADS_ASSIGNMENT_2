@@ -29,24 +29,24 @@ class ConnectMessage extends Message{
 
 class InitiateMessage extends Message{
 	int level;
-	int fragmentName;
+	int fragmentId;
 	NodeState state;
 
-	public InitiateMessage(int sender, int receiver, int level, int fragmentName, NodeState state){
+	public InitiateMessage(int sender, int receiver, int level, int fragmentId, NodeState state){
 		super(MessageType.INITIATE, sender, receiver);
 		this.level = level;
-		this.fragmentName = fragmentName;
+		this.fragmentId = fragmentId;
 		this.state = state;
 	}
 }
 
 class TestMessage extends Message{
 	int level;
-	int fragmentName;
+	int fragmentId;
 
-	public TestMessage(int sender, int receiver, int level, int fragmentName){
+	public TestMessage(int sender, int receiver, int level, int fragmentId){
 		super(MessageType.TEST, sender, receiver);
 		this.level = level;
-		this.fragmentName = fragmentName;
+		this.fragmentId = fragmentId;
 	}
 }
