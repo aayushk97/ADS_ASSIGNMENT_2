@@ -1,57 +1,37 @@
 //https://web.mit.edu/6.005/www/fa14/classes/20-queues-locks/message-passing/
 import java.util.*;
-
 class Node implements Runnable{
 	private Thread tId;
 	private int nodeId;
-	private int state;
+	private NodeState state;
 	public int fragmentId;
 	public int level;
 	
-	private int[][] neighbors;	//list of all neighbours with thier edge status ( basic:0/branch:1/reject:2) and edge weights
-				// a list of children: we can try to  use neighborlist as children also only 
-				//can specify parent seperately
-	private int parent;	// parent pointer
-				// message queue with sender id , type of message and message.should be  public I guess.
-				// but how other thread will put message on this this?call this object would make program sequential?
+	private int[][] neighbors;	
+	private int parent;	
 	private int rec;
 
 	private List<Message> messageList;
 
-	//edge status
-	final int BASIC = 0;
-	final int BRANCH = 1;
-	final int REJECT = 2;
-
-	//states
-	final int SLEEP = 0;
-	final int FIND = 1;
-	final int FOUND = 2;
-
 	public Node(int nodeId, List<Integer> listOfNeighbors, List<Message> messageList){
 
-		//Constructor to initialize a node
-		// System.out.println("NodeId: " + nodeId);
-		// for(Integer neighb : listOfNeighbors){
-		// 	System.out.println(neighb + " ");
-		// }
-		
-		state = SLEEP;
+
+		state = NodeState.SLEEP;
 		fragmentId = nodeId; 			// can we use nodeId as fragement id? 
 										//Edit 1: When it is initialized the value of fragment id will be node id. Edit 2: Ok
 		level = Integer.MAX_VALUE; 		// to say it's currently in sleep mode itself. 
 		this.nodeId = nodeId;
 		//int len = listOfNeighbors.length;
+
 		neighbors = new int[4][listOfNeighbors.size()];  // let first column be for: nodeId of nighbor, second: weight, third: status
 		prepareNeighborList(listOfNeighbors);		// fourth: whether its child(0) or parent(1) or neither -1.
 		
-		System.out.println("Printing from node: " + nodeId);
+		// System.out.println("Printing from node: " + nodeId);
 
-		for(int i =0 ; i < listOfNeighbors.size(); i++){
-			System.out.println(neighbors[i][0] + " " + neighbors[i][1] + " " + neighbors[i][2]);
-		}
+		// for(int i =0 ; i < listOfNeighbors.size(); i++){
+		// 	System.out.println(neighbors[i][0] + " " + neighbors[i][1] + " " + neighbors[i][2]);
+		// }
 		
-
 		this.messageList = messageList;
 		
 	}
@@ -61,6 +41,7 @@ class Node implements Runnable{
 		//Edit 2: Currently, Code in this method only for checking if thread are running properly.
 		Random rn = new Random();
 		int i = 0;
+
 		initialization();
 		System.out.println("Reading Message.");
 		getMessage();
@@ -77,15 +58,10 @@ class Node implements Runnable{
 		// 		Message msg = new ConnectMessage(this.nodeId, q, 3);
 		// 		sendMessage(msg);
 		// 		getMessage();
-				
-		// 	}
 
-		// 	try{
-		// 		Thread.sleep(500);
-		// 	}catch(Exception e){
 
-		// 	}
-		// }
+			
+		
 	}
 
 	public void start(){
@@ -106,9 +82,14 @@ class Node implements Runnable{
 			System.out.println("Graph is disconnected or Edges or not initialize properly");
 
 		}else{
-			//q = neighbors[q][0];
-			neighbors[q][2] = BRANCH;   
-			state = FOUND;    //we set the state of node to be found           
+
+			// //q = neighbors[q][0];
+			// neighbors[q][2] = BRANCH;   
+			// state = FOUND;    //we set the state of node to be found           
+
+			neighbors[q][2] = Status.BRANCH.ordinal();   
+			state = NodeState.FOUND;    //we set the state of node to be found           
+
 			level = 0;	  //set the level to 0 as it is only node in fragment
 			rec = 0;			
 			//send <connect,0> to q how? Can we invoke other thread how do I accept other 
@@ -123,8 +104,13 @@ class Node implements Runnable{
 		int wt = Integer.MAX_VALUE;
 		int indexMin = -1;
 		for(int i =0; i < neighbors.length; i++){         
-			if(neighbors[i][2] == BASIC){
-				System.out.println("Node:  "+ this.nodeId + " Weight: " + wt + " :" + neighbors[i][1]);
+
+			// if(neighbors[i][2] == BASIC){
+			// 	System.out.println("Node:  "+ this.nodeId + " Weight: " + wt + " :" + neighbors[i][1]);
+
+			if(neighbors[i][2] == Status.BASIC.ordinal()){
+				System.out.println("Weight: " + wt + " :" + neighbors[i][1]);
+
 				if(wt > neighbors[i][1]){
 					indexMin = i;
 					wt = neighbors[i][1];
@@ -156,9 +142,9 @@ class Node implements Runnable{
 		//Read Connect Message from your msg object
 
 		if(level < qLevel){
-			neighbors[qID][2] = BRANCH;
+			neighbors[qID][2] = Status.BRANCH.ordinal();
 			// send Initiate msg. 
-		}else if(neighbors[qID][2] == BASIC){
+		}else if(neighbors[qID][2] == Status.BASIC.ordinal()){
 			//how to implement wait? // Can we call initialize or find... we need to invoke a method to
 			// continue execution. I think we can make a manager method.
 			//waitManager();  // need to push back message else it will be lost... //EDIT 1: QUEUE? Edit 2: may be..
@@ -198,13 +184,14 @@ class Node implements Runnable{
 	private void prepareNeighborList(List<Integer> listOfNeighbors){
 		//Need to fill neighbors[][] array
 		// I am thinking to make it numberOfneighbors*4 size array (neighborId, weight, statusOfEdge, parent/child/none)
+
 		int i = 0;
-		//System.out.println("Node: " + this.nodeId);
+		System.out.println("Node: " + this.nodeId);
 		for(Integer q : listOfNeighbors){
 			//System.out.println(q + " " + Main.G[q][this.nodeId].getWeight());
 			neighbors[i][0] = q;
 			neighbors[i][1] = Main.G[q][this.nodeId].getWeight();
-			neighbors[i][2] = BASIC;
+			neighbors[i][2] = Status.BASIC.ordinal();
 			neighbors[i][3] = -1;
 			i++;
 		}

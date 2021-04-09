@@ -4,25 +4,21 @@ class Edge{
 	private int start;
 	private int end;
 	private int weight;
-	private int status;
+	private Status status;
 	
-	final int BASIC = 0;
-	final int BRANCH = 1;
-	final int REJECT = 2;
 	
 
-	public Edge(int u, int v, int w, int st){
+	public Edge(int u, int v, int w, Status st){
 
 		weight = w;
 		status = st;
 		start = u;
 		end = v;
 	}
-
 	public int getWeight(){ return weight; }
-	public int getStatus(){ return status; }
+	public Status getStatus(){ return status; }
 	public int getStart(){ return start; }
 	public int getEnd(){ return end; }
 
-	public void setStatus(int st){ status = st; }
+	public void setStatus(Status st){ status = st; }
 }

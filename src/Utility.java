@@ -9,8 +9,11 @@ class Utility{
 	//read Input 
 	
 	public static void readInput(String fileName){
+
 		File fileObj = new File(fileName);
+
 		try{
+			
 			Scanner fileStream = new Scanner(fileObj);
 			Main.N = fileStream.nextInt();
 			fileStream.nextLine();
@@ -30,7 +33,7 @@ class Utility{
 					int q = Integer.parseInt(x[1]);
 					int w = Integer.parseInt(x[2]);
 
-					Edge e = new Edge(p, q, w, 0);
+					Edge e = new Edge(p, q, w, Status.BRANCH);
 					System.out.println("p: " + p + " q: " + q + " w: " + w);
 					
 					Main.neighborsOfAll.get(p).add(q);
@@ -90,4 +93,3 @@ class Utility{
 		}
 	}
 }
-
