@@ -2,6 +2,7 @@ import java.util.Scanner;
 import java.util.Vector;
 import java.util.List;
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.io.File;
 import java.io.FileNotFoundException;
 
@@ -89,7 +90,8 @@ class Utility{
 		for(int i = 0; i < Main.N; i++){
 			Main.allNodes.add(null);
 			Main.neighborsOfAll.add(new ArrayList<>());
-			Main.allMessageList.add(new ArrayList<>());
+			//Main.allMessageList.add(new ArrayList<>());
+			Main.allMessageList.add(new LinkedList<>());
 		}
 	}
 }

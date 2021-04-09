@@ -15,9 +15,9 @@ class Node implements Runnable{
 	private int parent;	
 	private int rec;
 
-	private List<Message> messageList;
+	private Queue<Message> messageList;
 
-	public Node(int nodeId, List<Integer> listOfNeighbors, List<Message> messageList){
+	public Node(int nodeId, List<Integer> listOfNeighbors, Queue<Message> messageList){
 
 
 		state = NodeState.SLEEP;
@@ -129,18 +129,7 @@ class Node implements Runnable{
 	}
 
 	private void sendConnectMessage(int qNodeid, int myLevel){
-		//What I think we can't invoke method in other node..what do you think? We need to 
-		// somehow give a msg to other node? Can we receive a message incide this object?
-		// Or some global array/vector/queue need to be initialize..
 		
-		//Edit 1: we can try using DataOutputStream/DataInputStream as in below link states
-		//https://stackoverflow.com/questions/5680259/using-sockets-to-send-and-receive-data
-		//Edit 2: But sockets we need if we need to communicate through network?
-		//If some global data structure is used, we need to implement access control?
-
-		//EDIT 1: Is it better to Create a message class so we don't have to write seperate function for sending each type of message?
-		// Edit 2: Yes, we can make a message class with field of messageType, message parameter... but need to be 
-		// careful about different type message parameters Or can we use subclasses for messages?
 		Message msg = new ConnectMessage(this.nodeId, qNodeid, myLevel);
 		sendMessage(msg);
 	}
@@ -182,7 +171,7 @@ class Node implements Runnable{
 
 	private void sendMessage(Message msg){
 		int receipient = msg.receipent;
-		List<Message> recvQ = Main.allMessageList.get(receipient);
+		Queue<Message> recvQ = Main.allMessageList.get(receipient);
 		System.out.println("Sending message from " + nodeId + " to "+ msg.receipent);
 		synchronized(recvQ){
 			recvQ.add(msg);
@@ -198,6 +187,7 @@ class Node implements Runnable{
 		}
 		return false;
 	}
+
 	private Message getMessage(){
 		//List<Message> recvQ = Main.allMessageList.get(nodeId);
 		Message msg;
@@ -212,7 +202,7 @@ class Node implements Runnable{
 
 			// }
 			//messageList.add(msg);
-			msg = messageList.remove(0);
+			msg = messageList.remove();
 			
 			messageList.notify();
 			return msg;
@@ -244,3 +234,5 @@ class Node implements Runnable{
 //Just connect one end of edge to one node and other end to other instead of specifying on both 
 //nodes what are the nodes it is connected to?
 //https://www.geeksforgeeks.org/kruskals-minimum-spanning-tree-algorithm-greedy-algo-2/
+
+

@@ -3,8 +3,10 @@ public class Main{
 	static int N; //number of nodes
 	static Edge[][] G;
 	static Vector<Node> allNodes;
-	static Vector<List<Message>> allMessageList;
+	//static Vector<List<Message>> allMessageList;
+	static Vector<Queue<Message>> allMessageList;
 
+            
 	static Vector<List<Integer>> neighborsOfAll;
 	
 
