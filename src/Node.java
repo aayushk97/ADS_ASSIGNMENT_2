@@ -45,11 +45,11 @@ class Node implements Runnable{
 		neighbors = new int[4][listOfNeighbors.size()];  // let first column be for: nodeId of nighbor, second: weight, third: status
 		prepareNeighborList(listOfNeighbors);		// fourth: whether its child(0) or parent(1) or neither -1.
 		
-		// System.out.println("Printing from node: " + nodeId);
+		System.out.println("Printing from node: " + nodeId);
 
-		// for(int i =0 ; i < listOfNeighbors.size(); i++){
-		// 	System.out.println(neighbors[0][i] + " " + neighbors[1][i] + " " + neighbors[2][i]);
-		// }
+		for(int i =0 ; i < listOfNeighbors.size(); i++){
+			System.out.println(neighbors[i][0] + " " + neighbors[i][1] + " " + neighbors[i][2]);
+		}
 		
 
 		this.messageList = messageList;
@@ -61,6 +61,9 @@ class Node implements Runnable{
 		//Edit 2: Currently, Code in this method only for checking if thread are running properly.
 		Random rn = new Random();
 		int i = 0;
+		initialization();
+		System.out.println("Reading Message.");
+		getMessage();
 		// while(true){
 		// 	if(i==0){
 		// 		System.out.println("initialization");
@@ -97,18 +100,20 @@ class Node implements Runnable{
 	private void initialization(){
 		//findMinimum weight edge
 		int q = findMinimumWeightEdge();
-		System.out.println("Min Index: " + q);
+		//q = neighbors[0][q];
+		System.out.println("Node: " + this.nodeId + " Min Index: " + q);
 		if(q == -1) {
 			System.out.println("Graph is disconnected or Edges or not initialize properly");
 
 		}else{
+			//q = neighbors[q][0];
 			neighbors[q][2] = BRANCH;   
 			state = FOUND;    //we set the state of node to be found           
 			level = 0;	  //set the level to 0 as it is only node in fragment
 			rec = 0;			
 			//send <connect,0> to q how? Can we invoke other thread how do I accept other 
 			//threads message after  sending this message?
-			sendConnectMessage(q, level);   //EDIT 1: We send the level as parameter not the min weight?
+			sendConnectMessage(neighbors[q][0], level);   //EDIT 1: We send the level as parameter not the min weight?
 									// Edit 2 : yes, But need to send sender identification also else howreceiver will
 									//know from where message have come. q is not weight it index in neighour array
 		}
@@ -119,7 +124,7 @@ class Node implements Runnable{
 		int indexMin = -1;
 		for(int i =0; i < neighbors.length; i++){         
 			if(neighbors[i][2] == BASIC){
-				System.out.println("Weight: " + wt + " :" + neighbors[i][1]);
+				System.out.println("Node:  "+ this.nodeId + " Weight: " + wt + " :" + neighbors[i][1]);
 				if(wt > neighbors[i][1]){
 					indexMin = i;
 					wt = neighbors[i][1];
@@ -197,10 +202,10 @@ class Node implements Runnable{
 		//System.out.println("Node: " + this.nodeId);
 		for(Integer q : listOfNeighbors){
 			//System.out.println(q + " " + Main.G[q][this.nodeId].getWeight());
-			neighbors[0][i] = q;
-			neighbors[1][i] = Main.G[q][this.nodeId].getWeight();
-			neighbors[2][i] = BASIC;
-			neighbors[3][i] = -1;
+			neighbors[i][0] = q;
+			neighbors[i][1] = Main.G[q][this.nodeId].getWeight();
+			neighbors[i][2] = BASIC;
+			neighbors[i][3] = -1;
 			i++;
 		}
 
