@@ -187,7 +187,7 @@ class Node implements Runnable{
 		System.out.println("In processInitiateMsg method");
 
 		this.level = ((InitiateMessage)msg).level;
-		this.fragmentId = ((InitiateMessage)msg).fragmentName;
+		this.fragmentId = ((InitiateMessage)msg).fragmentId;
 		this.state = ((InitiateMessage)msg).state;
 		this.parent = msg.sender;
 
@@ -248,10 +248,11 @@ class Node implements Runnable{
 	}
 	
 	private void processTestMessage(TestMessage msg){
+		int i;
 		if(level > msg.level){
 			//wait
 			//place message at end of queue
-		}else if(fraagmentId == msg.fragmentName){
+		}else if(fragmentId == msg.fragmentId){
 			//node is in same fragment so to prevent cycles this edge has to be rejected
 			if(neighbours[i][2] == Status.BASIC.ordinal()){
 				neighbours[i][2] = Status.BASIC.ordinal();
