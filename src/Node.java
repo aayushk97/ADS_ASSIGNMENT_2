@@ -167,6 +167,8 @@ class Node implements Runnable{
 		Message msg = new ReportMessage(this.nodeId, qNodeid, bestWt);
 		sendMessage(msg);
 	}
+	
+	private void sendRejectMessage(int )
 
 
 	public int processConnectMsg(Message msg){
@@ -265,6 +267,7 @@ class Node implements Runnable{
 		}
 
 	}
+	
 
 	private void processsReportMsg(Message msg){
 		int q = msg.sender;
@@ -339,6 +342,7 @@ class Node implements Runnable{
 			
 			if(msg.sender != testNode){
 				//send reject message to q
+				sendRejectMessage(msg.sender)
 				
 			}else{
 				//if q == testNode then q will mark its edge to me as reject so we need not worry
@@ -350,6 +354,7 @@ class Node implements Runnable{
 		
 		}else{
 			//LEQ rule holds so we send ACCEPT Message to q
+			sendAcceptMessage(msg.sender);
 			
 		}
 	
