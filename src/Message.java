@@ -50,3 +50,5 @@ class TestMessage extends Message{
 		this.fragmentId = fragmentId;
 	}
 }
+
+//AcceptMessage, ReportMessage
