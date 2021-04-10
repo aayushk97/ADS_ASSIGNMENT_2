@@ -50,3 +50,38 @@ class TestMessage extends Message{
 		this.fragmentId = fragmentId;
 	}
 }
+
+
+class ReportMessage extends Message{
+	int bestWt;
+	
+	public ReportMessage(int sender, int receiver, int bestWt){
+		super(MessageType.REPORT, sender, receiver);
+		this.bestWt = bestWt;
+	
+	}
+
+}
+
+class AcceptMessage extends Message{
+	
+	public AcceptMessage(int sender, int receiver){
+		super(MessageType.ACCEPT, sender, receiver);
+	}
+
+}
+
+class RejectMessage extends Message{
+	public RejectMessage(int sender, int receiver){
+		super(MessageType.REJECT, sender, receiver);
+	}
+
+}
+
+class ChangeRoot extends Message{
+
+	public ChangeMessage(int sender, int receiver){
+		super(MessageType.CHANGEROOT, sender, receiver);
+	}
+}
+//AcceptMessage, ReportMessage
