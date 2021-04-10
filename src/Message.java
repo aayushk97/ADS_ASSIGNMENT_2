@@ -10,10 +10,6 @@ class Message {
 		this.receipent = receiver;
 	}
 	
-	public void send(){
-		//Need to acquire lock...
-
-	}
 }
 
 class ConnectMessage extends Message{
@@ -64,18 +60,17 @@ class ReportMessage extends Message{
 }
 
 class AcceptMessage extends Message{
-	
+
 	public AcceptMessage(int sender, int receiver){
 		super(MessageType.ACCEPT, sender, receiver);
 	}
-
 }
 
 class RejectMessage extends Message{
+
 	public RejectMessage(int sender, int receiver){
 		super(MessageType.REJECT, sender, receiver);
 	}
-
 }
 
 class ChangeRootMessage extends Message{
@@ -84,4 +79,3 @@ class ChangeRootMessage extends Message{
 		super(MessageType.CHANGEROOT, sender, receiver);
 	}
 }
-//AcceptMessage, ReportMessage

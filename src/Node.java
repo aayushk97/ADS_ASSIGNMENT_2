@@ -13,13 +13,15 @@ class Node implements Runnable{
 														// so to get the index of neighbour for a NodeId
 	private Vector<Integer> children;
 	private int parent;	
-	private int rec;
-	private int testNode = -1;
+	
+	
 
 	private int flag;
 	private int waitingCount;
 	private Queue<Message> messageList;
 	private Queue<Message> waitingMessage;
+
+	private int rec;
 
 	private int bestNode;
 	private int bestWt;
@@ -50,8 +52,8 @@ class Node implements Runnable{
 		this.waitingCount = 0;
 		
 		this.messageList = messageList;
-		this.waitingMessage = new Vector<Message>();
-		
+		//this.waitingMessage = new Vector<Message>();
+		this.waitingMessage = new LinkedList<>();
 
 	}
 
@@ -154,7 +156,7 @@ class Node implements Runnable{
 
 	private void sendInitiateMessage(int qNodeid, int level, int fragmentId, NodeState state){
 
-		Message msg = new InitiateMessage(this.nodeId, level,  qNodeid, fragmentId, state);
+		Message msg = new InitiateMessage(this.nodeId,  qNodeid, level, fragmentId, state);
 		sendMessage(msg);
 	}
 
@@ -167,10 +169,16 @@ class Node implements Runnable{
 		Message msg = new ReportMessage(this.nodeId, qNodeid, bestWt);
 		sendMessage(msg);
 	}
-	
-	private void sendRejectMessage(int )
+	private void sendAcceptMessage(int qNodeid){
+		Message msg = new AcceptMessage(this.nodeId, qNodeid);
+		sendMessage(msg);
+	}
+	private void sendRejectMessage(int qNodeid){
+		Message msg = new RejectMessage(this.nodeId, qNodeid);
+		sendMessage(msg);
+	}
 
-	private sendChangeRootMsg(int qNodeid){
+	private void sendChangeRootMessage(int qNodeid){
 		Message msg = new ChangeRootMessage(this.nodeId, qNodeid);
 		sendMessage(msg);
 	}
@@ -214,7 +222,7 @@ class Node implements Runnable{
 		bestNode = -1;
 		bestWt = Integer.MAX_VALUE;  // Need to check the limit of weight...
 		testNode = -1;
-
+		System.out.println("Exception at line 225??");
 		for(int i = 0; i < numOfNeighbors; i++){
 			if(neighbors[i][2] == Status.BRANCH.ordinal() && neighbors[i][0] != msg.sender){
 				sendInitiateMessage(neighbors[i][0], this.level + 1, this.fragmentId, this.state);
@@ -238,6 +246,41 @@ class Node implements Runnable{
 			testNode = -1;
 			report();
 		}
+	}
+
+	private void processTestMessage(Message msg){
+		
+		int q = msg.sender;
+		int qIndex = neighborsIndex.get(q);
+
+		if(level > ((TestMessage) msg).level){
+			//wait
+			//place message at end of queue
+			waitManager(msg);
+		}else if(fragmentId ==((TestMessage) msg).fragmentId){
+			//node is in same fragment so to prevent cycles this edge has to be rejected
+			if(neighbors[qIndex][2] == Status.BASIC.ordinal()){
+				neighbors[qIndex][2] = Status.REJECT.ordinal();
+			}
+			
+			if(msg.sender != testNode){
+				//send reject message to q
+				sendRejectMessage(msg.sender);
+				
+			}else{
+				//if q == testNode then q will mark its edge to me as reject so we need not worry
+				//about it
+				findMin();
+				
+			}
+			
+		
+		}else{
+			//LEQ rule holds so we send ACCEPT Message to q
+			sendAcceptMessage(msg.sender);
+			
+		}
+	
 	}
 
 	private void processAcceptMsg(Message msg){
@@ -265,7 +308,7 @@ class Node implements Runnable{
 	private void report(){
 		if(testNode == -1 ){
 			if(rec == allChild()){
-				this.state = found;
+				this.state = NodeState.FOUND;
 				sendReportMessage(this.parent, this.bestWt);
 			}
 		}
@@ -273,10 +316,11 @@ class Node implements Runnable{
 	}
 	
 
+
 	private void processsReportMsg(Message msg){
 		int q = msg.sender;
 		int qIndex = neighborsIndex.get(q);
-		int w = ((ReportMessage)msg).weight;
+		int w = ((ReportMessage)msg).bestWt;
 		if( q != parent){
 			if(w < this.bestWt){
 				bestWt = w;
@@ -299,7 +343,7 @@ class Node implements Runnable{
 	private void changeRoot(){
 		int bestNodeIndex = neighborsIndex.get(bestNode);
 		if (neighbors[bestNodeIndex][2] == Status.BRANCH.ordinal()){
-			sendChangeRootMsg(bestNode);
+			sendChangeRootMessage(bestNode);
 		}else{
 			neighbors[bestNodeIndex][2] = Status.BRANCH.ordinal();
 			sendConnectMessage(bestNode, this.level);
@@ -311,6 +355,10 @@ class Node implements Runnable{
 		changeRoot();
 	}
 
+
+	private int allChild(){
+		return 1;
+	}
 	public void stop(){
 		System.out.println("Completed Algorithm. Now stopping");
 	}
@@ -325,6 +373,7 @@ class Node implements Runnable{
 
 	private void sendMessage(Message msg){
 		int receipient = msg.receipent;
+		System.out.println("In Sending Message of " + nodeId + " "+ receipient);
 		Queue<Message> recvQ = Main.allMessageList.get(receipient);
 		System.out.println("Sending message from " + nodeId + " to "+ msg.receipent);
 		synchronized(recvQ){
@@ -364,37 +413,7 @@ class Node implements Runnable{
 		//System.out.println("node: " + nodeId + " Message: " + "sender: " + msg.sender + " " + msg.type);
 	}
 	
-	private void processTestMessage(TestMessage msg){
-		int i;
-		if(level > msg.level){
-			//wait
-			//place message at end of queue
-			waitManager(msg);
-		}else if(fragmentId == msg.fragmentId){
-			//node is in same fragment so to prevent cycles this edge has to be rejected
-			if(neighbors[i][2] == Status.BASIC.ordinal()){
-				neighbors[i][2] = Status.BASIC.ordinal();
-			}
-			
-			if(msg.sender != testNode){
-				//send reject message to q
-				sendRejectMessage(msg.sender)
-				
-			}else{
-				//if q == testNode then q will mark its edge to me as reject so we need not worry
-				//about it
-				findMin();
-				
-			}
-			
-		
-		}else{
-			//LEQ rule holds so we send ACCEPT Message to q
-			sendAcceptMessage(msg.sender);
-			
-		}
 	
-	}
 
 	private void prepareNeighborList(List<Integer> listOfNeighbors){
 	
