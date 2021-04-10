@@ -19,7 +19,7 @@ class Node implements Runnable{
 	private int flag;
 	private int waitingCount;
 	private Queue<Message> messageList;
-	private Vector<Message> waitingMessage;
+	private Queue<Message> waitingMessage;
 
 	private int bestNode;
 	private int bestWt;
@@ -330,6 +330,7 @@ class Node implements Runnable{
 		if(level > msg.level){
 			//wait
 			//place message at end of queue
+			waitManager(msg);
 		}else if(fragmentId == msg.fragmentId){
 			//node is in same fragment so to prevent cycles this edge has to be rejected
 			if(neighbors[i][2] == Status.BASIC.ordinal()){
@@ -338,10 +339,11 @@ class Node implements Runnable{
 			
 			if(msg.sender != testNode){
 				//send reject message to q
+				
 			}else{
 				//if q == testNode then q will mark its edge to me as reject so we need not worry
 				//about it
-				//findMin();
+				findMin();
 				
 			}
 			
