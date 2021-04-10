@@ -35,6 +35,7 @@ class Utility{
 					int w = Integer.parseInt(x[2]);
 
 					Edge e = new Edge(p, q, w, Status.BRANCH);
+					
 					System.out.println("p: " + p + " q: " + q + " w: " + w);
 					
 					Main.neighborsOfAll.get(p).add(q);
