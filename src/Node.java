@@ -6,6 +6,7 @@ class Node implements Runnable{
 	private NodeState state;
 	public int fragmentId;
 	public int level;
+
 	public int numOfNeighbors;
 	private int[][] neighbors;
 	private HashMap<Integer, Integer> neighborsIndex;  //Because index in neighbor array and nodeId are not same
@@ -156,6 +157,17 @@ class Node implements Runnable{
 		sendMessage(msg);
 	}
 
+	private void sendTestMessage(int qNodeid, int level, int fragmentId){
+		Message msg = new TestMessage(this.nodeId, qNodeid, level, fragmentId);
+		sendMessage(msg);
+	}
+
+	private void sendReportMessage(int qNodeid, int bestWt){
+		Message msg = new ReportMessage(this.nodeId, qNodeid, bestWt);
+		sendMessage(msg);
+	}
+
+
 	public int processConnectMsg(Message msg){
 		// proceesing connect message received from other nearest node.
 		// Read Connect Message from your msg object
@@ -196,7 +208,70 @@ class Node implements Runnable{
 		bestWt = Integer.MAX_VALUE;  // Need to check the limit of weight...
 		testNode = -1;
 
+		for(int i = 0; i < numOfNeighbors; i++){
+			if(neighbors[i][2] == Status.BRANCH.ordinal() && neighbors[i][0] != msg.sender){
+				sendInitiateMessage(neighbors[i][0], this.level + 1, this.fragmentId, this.state);
+			}
+		}
 
+		if (state == NodeState.FIND){
+			this.rec = 0;
+			findMin();
+		}
+
+	}
+
+
+	private void findMin(){
+		int minIndex = findMinimumWeightEdge();
+		if(minIndex < numOfNeighbors){
+			testNode = neighbors[minIndex][0];
+			sendTestMessage(testNode, this.level, this.fragmentId);
+		}else{
+			testNode = -1;
+			report();
+		}
+	}
+
+	private void processAcceptMsg(Message msg){
+		this.testNode = -1; 
+		int q = msg.sender;
+		int qIndex = neighborsIndex.get(q);
+		if(neighbors[qIndex][1] < bestWt){
+			bestWt = neighbors[qIndex][1];
+			bestNode = q;
+		}
+
+		report();
+	}
+
+	private void processRejectMsg(Message msg){
+		int q = msg.sender;
+		int qIndex = neighborsIndex.get(q);
+
+		if(neighbors[qIndex][2] == Status.BASIC.ordinal()){
+			neighbors[qIndex][2] = Status.REJECT.ordinal();
+		}
+		findMin();
+	}
+
+	private void report(){
+		if(testNode == -1 ){
+			if(rec == allChild()){
+				this.state = found;
+				sendReportMessage(this.parent, this.bestWt);
+			}
+		}
+
+	}
+
+	private void processsReportMsg(Message msg){
+		int q = msg.sender;
+		int qIndex = neighborsIndex.get(q);
+
+		if( q != parent){
+			if()
+		}
 
 	}
 	private void waitManager(Message msg){
@@ -206,6 +281,7 @@ class Node implements Runnable{
 		waitingMessage.add(msg);
 
 	}
+
 
 	private void sendMessage(Message msg){
 		int receipient = msg.receipent;
@@ -255,8 +331,8 @@ class Node implements Runnable{
 			//place message at end of queue
 		}else if(fragmentId == msg.fragmentId){
 			//node is in same fragment so to prevent cycles this edge has to be rejected
-			if(neighbours[i][2] == Status.BASIC.ordinal()){
-				neighbours[i][2] = Status.BASIC.ordinal();
+			if(neighbors[i][2] == Status.BASIC.ordinal()){
+				neighbors[i][2] = Status.BASIC.ordinal();
 			}
 			
 			if(msg.sender != testNode){
