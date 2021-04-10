@@ -168,6 +168,10 @@ class Node implements Runnable{
 		sendMessage(msg);
 	}
 
+	private sendChangeRootMsg(int qNodeid){
+		Message msg = new ChangeRootMessage(this.nodeId, qNodeid);
+		sendMessage(msg);
+	}
 
 	public int processConnectMsg(Message msg){
 		// proceesing connect message received from other nearest node.
@@ -269,11 +273,43 @@ class Node implements Runnable{
 	private void processsReportMsg(Message msg){
 		int q = msg.sender;
 		int qIndex = neighborsIndex.get(q);
-
+		int w = ((ReportMessage)msg).weight;
 		if( q != parent){
-			if()
+			if(w < this.bestWt){
+				bestWt = w;
+				bestNode = q;
+			}
+			rec = rec + 1;
+			report();
+		}else{
+			if(this.state == NodeState.FIND){
+				waitManager(msg);
+			}else if (w > bestWt){
+				changeRoot();
+			}else{
+				stop();
+			}
 		}
 
+	}
+
+	private void changeRoot(){
+		int bestNodeIndex = neighborsIndex.get(bestNode);
+		if (neighbors[bestNodeIndex][2] == Status.BRANCH.ordinal()){
+			sendChangeRootMsg(bestNode);
+		}else{
+			neighbors[bestNodeIndex][2] = Status.BRANCH.ordinal();
+			sendConnectMessage(bestNode, this.level);
+		}
+	}
+
+
+	private void processChangeRootMsg(Message msg){
+		changeRoot();
+	}
+
+	public void stop(){
+		System.out.println("Completed Algorithm. Now stopping");
 	}
 	private void waitManager(Message msg){
 		System.out.println("In waitManager");
