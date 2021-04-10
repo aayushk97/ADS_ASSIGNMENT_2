@@ -141,6 +141,7 @@ class Node implements Runnable{
 				}
 			}
 		}
+		
 		return indexMin;
 	}
 
@@ -255,8 +256,8 @@ class Node implements Runnable{
 			//place message at end of queue
 		}else if(fragmentId == msg.fragmentId){
 			//node is in same fragment so to prevent cycles this edge has to be rejected
-			if(neighbours[i][2] == Status.BASIC.ordinal()){
-				neighbours[i][2] = Status.BASIC.ordinal();
+			if(neighbors[i][2] == Status.BASIC.ordinal()){
+				neighbors[i][2] = Status.BASIC.ordinal();
 			}
 			
 			if(msg.sender != testNode){
