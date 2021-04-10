@@ -78,9 +78,9 @@ class RejectMessage extends Message{
 
 }
 
-class ChangeRoot extends Message{
+class ChangeRootMessage extends Message{
 
-	public ChangeMessage(int sender, int receiver){
+	public ChangeRootMessage(int sender, int receiver){
 		super(MessageType.CHANGEROOT, sender, receiver);
 	}
 }
