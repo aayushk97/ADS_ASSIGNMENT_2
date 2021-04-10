@@ -142,6 +142,7 @@ class Node implements Runnable{
 				}
 			}
 		}
+		
 		return indexMin;
 	}
 
