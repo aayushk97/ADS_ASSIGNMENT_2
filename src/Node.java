@@ -170,7 +170,7 @@ class Node implements Runnable{
 			while(i < waitingStats[0][0]){
 				Message m = waitingMessage.get(0).remove();
 				
-				System.out.println( m==null);
+				//System.out.println( m==null);
 				l = ((ConnectMessage)m).level;
 
 				if(Parameters.DEBUG2)
