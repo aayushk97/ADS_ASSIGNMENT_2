@@ -1,3 +1,19 @@
+we have to save output in desired format in file.
+
+perform all experiments one by one as given in assignment
+note all results those are asked 
+(it will be good if you save all msts in files named accordingly e.g. input50Node.txt and output50Node.txt or whatever seems you right).
+
+
+after experiment verify the autograding format ( may use some flag or parameter in Parameters.java so that while
+autograding only it run the way it should.. no extra print etc.)
+
+For report:
+we have to plot so save the data which is required for ploting..
+
+baaki dekh lenge... jitna ho jaye utna kardo...
+
+
 5
 (0 ,1 , 7)
 (0 ,2 , 6)
