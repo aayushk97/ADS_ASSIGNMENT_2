@@ -2,7 +2,16 @@ import java.util.InputMismatchException;
 import java.util.Scanner;
 import java.io.File;
 import java.io.FileNotFoundException;
+<<<<<<< HEAD
 public class Prims{
+=======
+import java.util.Vector;
+import java.util.*;  
+
+public class Prims{
+	public static Vector<Edge>primsResult;
+	public static Edge[][] G;
+>>>>>>> b321825ceb27a9bab96430dafb97a7729eceb83e
 	
 	private boolean unsettled[];
 	private boolean settled[];
@@ -96,13 +105,23 @@ public class Prims{
 
 	public void printMST(){
 		for(int vertex = 1; vertex < numberofvertices; vertex++){
+<<<<<<< HEAD
 			System.out.println("("+parent[vertex]+" , "+vertex+", "+adjacencyMatrix[vertex][parent[vertex]]+")");
+=======
+			Edge e = Prims.G[parent[vertex]][vertex];
+			primsResult.add(e);
+			//System.out.println("("+parent[vertex]+" , "+vertex+", "+adjacencyMatrix[parent[vertex]][vertex]+")");
+>>>>>>> b321825ceb27a9bab96430dafb97a7729eceb83e
 		}
 	
 	}
 
 	public static void main(String[] args){
+<<<<<<< HEAD
 	
+=======
+		int number_of_vertices;
+>>>>>>> b321825ceb27a9bab96430dafb97a7729eceb83e
 		if(args.length == 2){
 			System.out.println("Input file: "+args[0]);
 			System.out.println("Output file: "+args[1]);
@@ -112,7 +131,11 @@ public class Prims{
 			
 			int adjacency_matrix[][];
 			
+<<<<<<< HEAD
 			int number_of_vertices;
+=======
+			
+>>>>>>> b321825ceb27a9bab96430dafb97a7729eceb83e
 			File fileObj = new File(inputfile);
 			
 
@@ -125,9 +148,20 @@ public class Prims{
 			for(int i = 0; i < number_of_vertices; i++){
 				for(int j = 0; j < number_of_vertices; j++){
 					adjacency_matrix[i][j] = INFINITE;
+<<<<<<< HEAD
 				}
 			
 			}
+=======
+					
+				}
+			
+			}
+			
+			
+			primsResult = new Vector<Edge>(number_of_vertices-1);
+			Prims.G = new Edge[number_of_vertices][number_of_vertices];
+>>>>>>> b321825ceb27a9bab96430dafb97a7729eceb83e
 			while(fileStream.hasNextLine()){
 				String line = fileStream.nextLine();
 				if(line.length() > 5){
@@ -139,6 +173,14 @@ public class Prims{
 
 					adjacency_matrix[p][q] = w;
 					adjacency_matrix[q][p] = w;
+<<<<<<< HEAD
+=======
+					
+					Edge e = new Edge(p, q, w, Status.BRANCH);
+					
+					Prims.G[p][q] = e;
+					Prims.G[q][p] = e;
+>>>>>>> b321825ceb27a9bab96430dafb97a7729eceb83e
 					//System.out.println("P: "+p+" q:"+q+"w:"+w);
 				}
 			
@@ -147,6 +189,15 @@ public class Prims{
 			Prims prims = new Prims(number_of_vertices);
 			prims.primsAlgorithm(adjacency_matrix);
 			prims.printMST();
+<<<<<<< HEAD
+=======
+			
+			sortByWeight(primsResult);
+			for(int i = 0; i < number_of_vertices -1; i++){
+				
+				System.out.println("("+primsResult.get(i).getStart()+" , "+primsResult.get(i).getEnd()+", "+primsResult.get(i).getWeight()+")");
+			}
+>>>>>>> b321825ceb27a9bab96430dafb97a7729eceb83e
 		
 		}catch(FileNotFoundException e){
 			System.out.println("FileNotFoundException");
@@ -158,5 +209,19 @@ public class Prims{
 			
 		//scan.close();
 		}
+<<<<<<< HEAD
 	}
+=======
+		
+		
+    		
+	}
+	
+	public static void sortByWeight(Vector<Edge> vec){
+		Collections.sort(vec, Comparator.comparing(s -> s.getWeight()));
+	}
+	
+
+
+>>>>>>> b321825ceb27a9bab96430dafb97a7729eceb83e
 }
