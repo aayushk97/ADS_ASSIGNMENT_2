@@ -74,20 +74,13 @@ class Node implements Runnable{
 			if(this.state == NodeState.FOUND){
 				//need check whether algo completed
 				if(Main.areWeDone){
-					System.out.println(nodeId + " We are Done");
+					//System.out.println(nodeId + " We are Done");
 					break;
 				}
 			}
 			 
 			Message msg = checkWaitinglist();
-			if(msg==null){
-				if(Parameters.DEBUG2)
-					System.out.println("\n"+ nodeId + " Returned Null from checkWaitinglist.\n");
 			
-			}else{
-				if(Parameters.DEBUG2)
-					System.out.println("\n"+ nodeId + " Returned " +msg.type +" mesage from checkWaitinglist.\n");
-			}
 			if(msg==null){
 				//System.out.println(nodeId + " Now checking receive queue\n" );
 				// synchronized(messageList){
@@ -107,11 +100,11 @@ class Node implements Runnable{
 			
 			if(msg!= null){
 				if(msg.type == MessageType.CONNECT){
-					System.out.println(nodeId + " proceesing Connect Message: " + System.identityHashCode(msg) + "\n");
+					//System.out.println(nodeId + " proceesing Connect Message: " + System.identityHashCode(msg) + "\n");
 					int flag = processConnectMsg(msg);		//wait managing
 					
 				}else if (msg.type == MessageType.INITIATE){
-					System.out.println(nodeId + " Process Initiate Message...");
+					//System.out.println(nodeId + " Process Initiate Message...");
 					processInitiateMsg(msg);
 
 				}else if(msg.type == MessageType.TEST){
@@ -136,7 +129,7 @@ class Node implements Runnable{
 		}
 
 		updateEdges();
-		System.out.println(nodeId + " is finished");
+		//System.out.println(nodeId + " is finished");
 		
 	}
 
@@ -253,11 +246,11 @@ class Node implements Runnable{
 			}
 		}
 		if(!flag && waitingStats[2][0] > 0  && this.state == NodeState.FOUND){
-			System.out.println(nodeId + " Dequeing Report message from wait size: " 
-				+ waitingMessage.get(0).size()+" " +  waitingStats[2][0]);
+			// System.out.println(nodeId + " Dequeing Report message from wait size: " 
+			// 	+ waitingMessage.get(0).size()+" " +  waitingStats[2][0]);
 
 			msg = waitingMessage.get(2).remove();
-			System.out.println(nodeId + " report null? : " + (msg==null));
+			//System.out.println(nodeId + " report null? : " + (msg==null));
 			waitingStats[2][0]--;
 			flag = true;
 			return msg;
@@ -268,12 +261,12 @@ class Node implements Runnable{
 	}
 	private void waitManager(Message msg){
 
-		System.out.println("In waitManager ");
+		//System.out.println("In waitManager ");
 
 		if(msg.type == MessageType.CONNECT) {
 
-			System.out.println(nodeId + " Enqueue ConnectMessage " + waitingStats[0][0] + " "
-				+ waitingMessage.get(0).size() +"\n");
+			// System.out.println(nodeId + " Enqueue ConnectMessage " + waitingStats[0][0] + " "
+			// 	+ waitingMessage.get(0).size() +"\n");
 
 			int l = ((ConnectMessage)msg).level;
 
@@ -287,11 +280,11 @@ class Node implements Runnable{
 				waitingStats[0][1] = l; 
 
 			waitingMessage.get(0).add(msg);
-			System.out.println(nodeId + " Enqueued ConnectMessage " +  waitingStats[0][0] + " " 
-				+ waitingMessage.get(0).size() +"\n");
+			//System.out.println(nodeId + " Enqueued ConnectMessage " +  waitingStats[0][0] + " " 
+			//	+ waitingMessage.get(0).size() +"\n");
 
 		}else if(msg.type == MessageType.TEST){
-			System.out.println(nodeId + " Enqueue Test " + waitingStats[1][0] + " " + waitingMessage.get(2).size());
+			//System.out.println(nodeId + " Enqueue Test " + waitingStats[1][0] + " " + waitingMessage.get(2).size());
 			int l = ((TestMessage)msg).level;
 
 			waitingStats[1][0]++;
@@ -305,13 +298,13 @@ class Node implements Runnable{
 
 			waitingMessage.get(1).add(msg);
 
-			System.out.println(nodeId + " Enqueued Test " + waitingStats[1][0] + " " + waitingMessage.get(2).size()+"\n");
+			//System.out.println(nodeId + " Enqueued Test " + waitingStats[1][0] + " " + waitingMessage.get(2).size()+"\n");
 			
 		}else{
-			System.out.println(nodeId + " Enqueue report t: " + msg.type + " size: " + waitingMessage.get(2).size());
+			//System.out.println(nodeId + " Enqueue report t: " + msg.type + " size: " + waitingMessage.get(2).size());
 			waitingStats[2][0]++;
 			waitingMessage.get(2).add(msg);
-			System.out.println(nodeId + " Enqueued report t:"+ msg.type + " newSize: " + waitingMessage.get(2).size()+"\n");
+			//System.out.println(nodeId + " Enqueued report t:"+ msg.type + " newSize: " + waitingMessage.get(2).size()+"\n");
 		}
 		
 	}
@@ -319,7 +312,7 @@ class Node implements Runnable{
 
 	public void start(){
 		//will start the thread and call initialization method.
-		System.out.println("Starting Thread: " + nodeId);
+		//System.out.println("Starting Thread: " + nodeId);
 		if(tId == null){
 			tId = new Thread(this);
 			tId.start();
@@ -379,7 +372,7 @@ class Node implements Runnable{
 
 		if(((ConnectMessage)msg).level < this.level){
 
-			System.out.println(nodeId + "Processing Connect in rule LT");
+			//System.out.println(nodeId + "Processing Connect in rule LT");
 
 			neighbors[qID][2] = Status.BRANCH.ordinal();
 
@@ -387,20 +380,20 @@ class Node implements Runnable{
 
 			sendInitiateMessage(msg.sender, this.level, this.fragmentId, this.state);
 
-			System.out.println(nodeId + " LT: Processed: + " +  System.identityHashCode(msg));
+			//System.out.println(nodeId + " LT: Processed: + " +  System.identityHashCode(msg));
 
 			return 1;
 
 		}else if(neighbors[qID][2] == Status.BASIC.ordinal()){
 			
-			System.out.println(nodeId + " waitManager call...");
-			waitManager(msg);  // need to push back message else it will be lost... //EDIT 1: QUEUE? Edit 2: may be..
-			System.out.println(nodeId + " WaiT: + " +  System.identityHashCode(msg));
+			//System.out.println(nodeId + " waitManager call...");
+			waitManager(msg);  
+			//System.out.println(nodeId + " WaiT: + " +  System.identityHashCode(msg));
 		}else{
-			System.out.println(nodeId + "Processing Connect in rule ET");
+			//System.out.println(nodeId + "Processing Connect in rule ET");
 			neighbors[qID][3] = 0;
 			sendInitiateMessage(msg.sender, this.level + 1, neighbors[qID][1], NodeState.FIND);
-			System.out.println(nodeId + " ET: Processed: + " +  System.identityHashCode(msg));
+			//System.out.println(nodeId + " ET: Processed: + " +  System.identityHashCode(msg));
 			return 1;
 		}
 		return 0;
@@ -560,7 +553,7 @@ class Node implements Runnable{
 				waitManager(msg);
 
 			}else if (w > bestWt){
-				System.out.println("node: "+ nodeId + " bestWt: " + bestWt + " w: " + w + " bestNode : " + bestNode);
+				//System.out.println("node: "+ nodeId + " bestWt: " + bestWt + " w: " + w + " bestNode : " + bestNode);
 				changeRoot();
 			}else if(w == Integer.MAX_VALUE && bestWt == Integer.MAX_VALUE){
 				stop();
@@ -612,9 +605,9 @@ class Node implements Runnable{
 	}
 
 	public void stop(){
-		System.out.println(nodeId + " Completed Algorithm. Now stopping");
+		//System.out.println(nodeId + " Completed Algorithm. Now stopping");
 		Main.areWeDone = true;
-		System.out.println(nodeId + " We are Done set to True.");
+		//System.out.println(nodeId + " We are Done set to True.");
 		//notifyAll();
 	}
 	
@@ -659,7 +652,7 @@ class Node implements Runnable{
 		int receipient = msg.receipent;
 		//System.out.println("Sending Message of " + nodeId + " "+ receipient);
 		Queue<Message> recvQ = Main.allMessageList.get(receipient);
-		System.out.println("Sending message from " + nodeId + " to "+ msg.receipent);
+		//System.out.println("Sending message from " + nodeId + " to "+ msg.receipent);
 		synchronized(recvQ){
 			recvQ.add(msg);
 			recvQ.notify();
@@ -702,7 +695,7 @@ class Node implements Runnable{
 	private void prepareNeighborList(List<Integer> listOfNeighbors){
 	
 		int i = 0;
-		System.out.println("Node: " + this.nodeId);
+		//System.out.println("Node: " + this.nodeId);
 		for(Integer q : listOfNeighbors){
 			//System.out.println(q + " " + Main.G[q][this.nodeId].getWeight());
 			neighbors[i][0] = q;									//NodeId of neighbor connected to this edge
@@ -717,11 +710,3 @@ class Node implements Runnable{
 	}
 
 }
-//EDIT 1: Can we have a class for edge so that it would be easier for us to connect to 2 nodes. 
-//Just connect one end of edge to one node and other end to other instead of specifying on both 
-//nodes what are the nodes it is connected to?
-//https://www.geeksforgeeks.org/kruskals-minimum-spanning-tree-algorithm-greedy-algo-2/
-
-
-//To Do: append the find min wieght function to include report if it doesn;t find the least weight edge 
-//2. Write in detail the test class

@@ -5,7 +5,8 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.io.File;
 import java.io.FileNotFoundException;
-
+import java.util.Comparator;
+import java.util.Collections;
 class Utility{
 	//read Input 
 	
@@ -36,7 +37,7 @@ class Utility{
 
 					Edge e = new Edge(p, q, w, Status.BRANCH);
 					
-					System.out.println("p: " + p + " q: " + q + " w: " + w);
+					//System.out.println("p: " + p + " q: " + q + " w: " + w);
 					
 					Main.neighborsOfAll.get(p).add(q);
 					Main.neighborsOfAll.get(q).add(p);
@@ -95,4 +96,27 @@ class Utility{
 			Main.allMessageList.add(new LinkedList<>());
 		}
 	}
+
+	// public static boolean testCorrectness(String outfile1, String outfile2){
+		
+	// }
+	public static boolean testCorrectness(Vector<Edge> outvec1, Vector<Edge> outvec2){
+		if(outvec1.size() == outvec2.size()){
+			for(int i = 0; i < outvec1.size(); i++)
+			{
+				if( !( (outvec1.get(i).getWeight() == outvec1.get(i).getWeight())
+				 && (outvec1.get(i).getStart() == outvec1.get(i).getStart())
+				 && (outvec1.get(i).getEnd() == outvec1.get(i).getEnd()) ) ){
+					return false;
+				}
+			}
+			return true;
+		}else{
+			return false;
+		}
+	}
+
+	public static void sortByWeight(Vector<Edge> vec) {
+        Collections.sort(vec, Comparator.comparing(s -> s.getWeight()));
+    }
 }

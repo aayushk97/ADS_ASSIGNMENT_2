@@ -15,6 +15,7 @@ class Edge{
 		start = u;
 		end = v;
 	}
+	
 	public int getWeight(){ return weight; }
 	public Status getStatus(){ return status; }
 	public int getStart(){ return start; }
